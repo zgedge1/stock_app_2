@@ -14,18 +14,6 @@ pipeline {
                 checkout scm
             }
         }
-    
-        stage('Build'){
-            steps{
-                script{
-                    // set JAVA_HOME env for Maven
-
-                    env.JAVA_HOME = tool('JDK11')
-                    def mavenCmd = tool 'maven1'
-                    sh "${mavenCmd} clean compile"
-                }
-            }
-        }
 
         stage('Test'){
             steps{
