@@ -18,11 +18,11 @@ pipeline {
         stage('Build'){
             steps{
                 script{
-                    def mavenCmd = '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/maven1/bin/mvn'
+                    // set JAVA_HOME env for Maven
+
+                    env.JAVA_HOME = tool('JDK11')
+                    def mavenCmd = tool 'maven1'
                     sh "${mavenCmd} clean compile"
-                    sh 'echo $PATH'
-                    sh 'which mvn'
-                    sh "ls -l ${mavenCmd}"
                 }
             }
         }
