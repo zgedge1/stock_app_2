@@ -1,16 +1,15 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:latest' // Use a Maven image with Java pre-installed
-        }
-    }
+    agent any
 
     stages {
         stage('Test') {
             steps {
                 script {
-                    // Change to the workspace directory
-                    dir('/workspace') {
+                    // Run commands inside a Docker container
+                    docker.image('maven:latest').inside {
+                        // Change to the workspace directory
+                        sh 'cd /workspace'
+
                         // List files to check the directory structure
                         sh 'ls -R'
 
