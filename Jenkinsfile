@@ -17,7 +17,7 @@ pipeline {
                         sh 'ls -R'
 
                         // Compile Java code
-                        sh 'javac -d target src/main/java/com/stockapp1/stockappgui.java'
+                        sh 'javac -d target /home/workspace/stock_app_no_gui_java/src/main/java/com/stockapp1'
 
                         // Run the compiled Java class
                         sh 'java -cp target com.stockapp1.stockappgui'
