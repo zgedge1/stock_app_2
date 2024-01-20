@@ -2,22 +2,31 @@ pipeline {
     agent any
 
     stages {
-        stage('Test') {
+        stage('Checkout') {
             steps {
                 script {
-                    // Run Docker commands inside a script block
-                    sh 'docker run -v $PWD:/workspace -w /workspace maven:latest ls -R'
-
-                    // Compile Java code
-                    sh 'docker run -v $PWD:/workspace -w /workspace maven:latest mvn clean compile'
-
-                    // Run the compiled Java class
-                    sh 'docker run -v $PWD:/workspace -w /workspace maven:latest java -cp target com.stockapp1.stockappgui'
+                    // Checkout your code from version control (e.g., Git)
+                    checkout scm
                 }
             }
         }
-        // Other stages...
-    }
 
-    // Post actions...
+        stage('Build') {
+            steps {
+                script {
+                    // Compile the Java code
+                    sh 'javac -cp .:path/to/your/json-jar-library.jar src/com/stockapp1/stockappnogui.java'
+                }
+            }
+        }
+
+        stage('Run') {
+            steps {
+                script {
+                    // Run the Java application
+                    sh 'java -cp .:path/to/your/json-jar-library.jar src/com/stockapp1/stockappnogui'
+                }
+            }
+        }
+    }
 }
