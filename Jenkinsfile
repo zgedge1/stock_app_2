@@ -5,20 +5,14 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Run commands inside a Docker container
-                    docker.image('maven:latest').inside {
-                        // Change to the workspace directory
-                        sh 'cd /workspace'
+                    // Run Docker commands inside a script block
+                    sh 'docker run -v $PWD:/workspace -w /workspace maven:latest ls -R'
 
-                        // List files to check the directory structure
-                        sh 'ls -R'
+                    // Compile Java code
+                    sh 'docker run -v $PWD:/workspace -w /workspace maven:latest mvn clean compile'
 
-                        // Compile Java code
-                        sh 'javac -d target src/main/java/com/stockapp1/stockappgui.java'
-
-                        // Run the compiled Java class
-                        sh 'java -cp target com.stockapp1.stockappgui'
-                    }
+                    // Run the compiled Java class
+                    sh 'docker run -v $PWD:/workspace -w /workspace maven:latest java -cp target com.stockapp1.stockappgui'
                 }
             }
         }
