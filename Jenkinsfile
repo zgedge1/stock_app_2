@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         maven 'maven1'
-        jdk 'JDK11'
+        jdk 'https://download.oracle.com/otn/java/jdk/11.0.21%2B9/8819d0447e4d41b3bd1d9e1007728d17/jdk-11.0.21_linux-x64_bin.tar.gz'
     }
 
     stages{
