@@ -15,7 +15,7 @@ pipeline {
             steps {
                 script {
                     // Compile the Java code
-                    sh 'javac -cp .:/home/zach/Documents/javacode/stock/target/stock-1.0-SNAPSHOT.jar /var/jenkins_home/workspace/stock_app_no_gui_java/src/main/java/com/stockapp1'
+                    sh '/var/jenkins_home/workspace/stock_app_no_gui_java/src/main/java/com/stockapp1'
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Run the Java application
-                    sh 'java -cp .:/home/zach/Documents/javacode/stock/target/stock-1.0-SNAPSHOT.jar /var/jenkins_home/workspace/stock_app_no_gui_java/src/main/java/com/stockapp1'
+                    sh 'java -cp .:var/jenkins_home/workspace/stock_app_no_gui_java/src/main/java/com/stockapp1'
 /stockapp1''
                 }
             }
