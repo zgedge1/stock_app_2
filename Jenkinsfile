@@ -59,9 +59,9 @@ pipeline {
                 script{
                     sh 'echo $PATH'
                     sh 'which mvn'
-                    sh 'ls -l /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/maven1'
-                    sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
-                    sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
+                    sh 'sudo ls -l /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/maven1'
+                    sh 'sudo ls -l /var/jenkins_home/workspace/stock_app_non_gui'
+                    sh 'sudo ls -l /var/jenkins_home/workspace/stock_app_non_gui'
 
                 }
             }
