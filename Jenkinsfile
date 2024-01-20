@@ -1,32 +1,80 @@
+
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = 'jenkins/jenkins'
-        LOCAL_CODE_PATH = '/home/zach/Documents/javacode/stock/src/main/java/com/stockapp1/stockappnogui.java'
-        JAR_LIBRARY_NAME = 'stock-1.0-SNAPSHOT.jar'
-        MAIN_CLASS = 'com.stockapp1.stockappnogui'
+    tools {
+        maven 'maven1'
+        jdk 'JDK11'
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    checkout scm
+    stages{
+
+        stage('Checkout Code'){
+            steps{
+                checkout scm
+            }
+        }
+    
+        stage('Build'){
+            steps{
+                script{
+                    // set JAVA_HOME env for Maven
+
+                    env.JAVA_HOME = tool('JDK11')
+                    def mavenCmd = tool 'maven1'
+                    sh "${mavenCmd} clean compile"
                 }
             }
         }
 
-        stage('Build and Run in Docker') {
-            steps {
-                script {
-                    // Build Docker command
-                    def dockerCommand = "docker run -v ${LOCAL_CODE_PATH}:/app ${DOCKER_IMAGE} java -cp /app:/app/${JAR_LIBRARY_NAME} ${MAIN_CLASS}"
+        stage('Test'){
+            steps{
+                script{
+                    def mavenCmd = tool 'maven1'
+                    sh "${mavenCmd} test"
+                }
+            } 
+        }
 
-                    // Execute Docker command
-                    sh dockerCommand
+        stage('Install Dependencies') {
+            steps{
+                script {
+                    def mavenCmd = tool 'maven1'
+                    sh "${mavenCmd} install"
                 }
             }
+        }
+
+        stage ('Run Application') {
+            steps{
+                script{
+                    def mavenCmd = tool 'maven1'
+                    sh "${mavenCmd} exec:java -Dexec.mainClass=com.stockapp1.stockappgui"
+                }
+            }
+        }
+
+        stage ('Debug') {
+            steps{
+                script{
+                    sh 'echo $PATH'
+                    sh 'which mvn'
+                    sh 'ls -l /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/maven1'
+                    sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
+                    sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
+
+                }
+            }
+        }
+    }
+
+    post{
+        success{
+            echo 'Pipeline Build Success!'
+        }
+
+        failure{
+            echo 'Pipeline Failed!'
         }
     }
 }
