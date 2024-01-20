@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -14,15 +13,16 @@ pipeline {
                 checkout scm
             }
         }
-    
+
         stage('Build'){
             steps{
                 script{
-                    // set JAVA_HOME env for Maven
-
-                    env.JAVA_HOME = tool('JDK11')
                     def mavenCmd = tool 'maven1'
+                    def projectPath = "/var/jenkins_home/workspace/stock_app_non_gui"
                     sh "${mavenCmd} clean compile"
+                    sh 'echo $PATH'
+                    sh 'which mvn'
+                    sh "ls -l ${mavenCmd}"
                 }
             }
         }
@@ -59,9 +59,9 @@ pipeline {
                 script{
                     sh 'echo $PATH'
                     sh 'which mvn'
-                    sh 'sudo ls -l /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/maven1'
-                    sh 'sudo ls -l /var/jenkins_home/workspace/stock_app_non_gui'
-                    sh 'sudo ls -l /var/jenkins_home/workspace/stock_app_non_gui'
+                    sh 'ls -l /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/maven1'
+                    sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
+                    sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
 
                 }
             }
