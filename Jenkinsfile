@@ -18,7 +18,7 @@ pipeline {
             steps{
                 script{
                     def mavenCmd = tool 'maven1'
-                    def projectPath = "/var/jenkins_home/workspace/stock_app_non_gui"
+                    def projectPath = "/var/jenkins_home/workspace/stock_app_non_gui/Jenkinsfile"
                     sh "${mavenCmd} clean compile"
                     sh 'echo $PATH'
                     sh 'which mvn'
