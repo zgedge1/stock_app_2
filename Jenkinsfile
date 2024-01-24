@@ -64,7 +64,7 @@ pipeline{
             echo 'Pipeline Build Success'
         }
 
-        fail{
+        failure{
             'Pipeline Build Failure'
         }
     }
