@@ -65,7 +65,7 @@ pipeline{
         }
 
         failure{
-            'Pipeline Build Failure'
+            echo 'Pipeline Build Failure'
         }
     }
 }
