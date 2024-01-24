@@ -41,7 +41,7 @@ pipeline{
             steps{
                 script{
                     def mavenCmd = tool 'maven1'
-                    sh "${mavenCmd} exec: java -Dexec.mainClass=com.stockapp1.tock_app_non_gui"
+                    sh "${mavenCmd} exec: java -Dexec.mainClass=com.stockapp1.stock_app_non_gui"
                 }
             }
         }
