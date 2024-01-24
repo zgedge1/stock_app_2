@@ -1,68 +1,58 @@
-pipeline {
+
+pipeline{
     agent any
 
-    tools {
+    tools{
         maven 'maven1'
         jdk 'JDK11'
     }
 
     stages{
-
         stage('Checkout Code'){
             steps{
                 checkout scm
             }
         }
 
-        stage('Build'){
+        stage('build'){
             steps{
                 script{
-                    def mavenCmd = tool 'maven1'
+
+                    def mvnCmd = tool 'maven1'
                     def projectPath = "/var/jenkins_home/workspace/stock_app_non_gui"
-                    sh "${mavenCmd} clean install"
-                    sh 'echo $PATH'
-                    sh 'which mvn'
-                    sh "ls -l ${mavenCmd}"
+                    sh"${mavenCmd} clean install"
+                    sh'which mvn'
+                    sh "ls-l ${mavenCmd}"
                 }
             }
         }
 
-        stage('Test'){
+        stage ('test'){
             steps{
                 script{
                     def mavenCmd = tool 'maven1'
                     sh "${mavenCmd} test"
                 }
-            } 
-        }
-
-        stage('Install Dependencies') {
-            steps{
-                script {
-                    def mavenCmd = tool 'maven1'
-                    sh "${mavenCmd} install"
-                }
             }
         }
 
-        stage ('Run Application') {
+        stage ('Install Dependencies'){
             steps{
                 script{
                     def mavenCmd = tool 'maven1'
-                    sh "${mavenCmd} exec:java -Dexec.mainClass=com.stockapp1.stockappgui"
+                    sh "${mavenCmd} exec: java -Dexec.mainClass=com.stockapp1.tock_app_non_gui"
                 }
             }
         }
 
-        stage ('Debug') {
+        stage ('Debug'){
             steps{
                 script{
                     sh 'echo $PATH'
                     sh 'which mvn'
-                    sh 'ls -l /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/maven1'
+                    sh 'ls-l/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/maven1'
                     sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
                     sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
-
                 }
             }
         }
@@ -70,11 +60,11 @@ pipeline {
 
     post{
         success{
-            echo 'Pipeline Build Success!'
+            echo 'Pipeline Build Success'
         }
 
-        failure{
-            echo 'Pipeline Failed!'
+        fail{
+            'Pipeline Build Failure'
         }
     }
 }
