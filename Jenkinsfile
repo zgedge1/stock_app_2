@@ -14,13 +14,14 @@ pipeline{
             }
         }
 
-        stage('build'){
+        stage('Build'){
             steps{
                 script{
 
                     def mvnCmd = tool 'maven1'
                     def projectPath = "/var/jenkins_home/workspace/stock_app_non_gui"
                     sh"${mavenCmd} clean install"
+                    echo '$PATH'
                     sh'which mvn'
                     sh "ls-l ${mavenCmd}"
                 }
