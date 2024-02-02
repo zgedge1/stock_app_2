@@ -1,70 +1,69 @@
-
-pipeline{
+pipeline {
     agent any
 
-    tools{
-        maven 'maven1'
-        jdk 'JDK11'
-    }
-
-    stages{
-        stage('Checkout Code'){
-            steps{
+    stages {
+        stage('Checkout Code') {
+            steps {
                 checkout scm
             }
         }
 
-        stage('Build'){
-            steps{
-                script{
+        stage('Build') {
+            steps {
+                script {
+                    // Find Maven home dynamically
+                    def mavenHome = sh(script: 'mvn -v | grep "Maven home"', returnStdout: true).trim().replaceAll('Maven home: ', '')
 
-                    def mavenCmd = tool 'maven1'
-                    def projectPath = "/var/jenkins_home/workspace/stock_app_non_gui"
-                    sh"${mavenCmd} clean install"
-                    echo '$PATH'
-                    sh'which mvn'
-                    sh "ls-l ${mavenCmd}"
+                    // Use Maven home to run Maven commands
+                    sh "${mavenHome}/bin/mvn clean install"
                 }
             }
         }
 
-        stage ('test'){
-            steps{
-                script{
-                    def mavenCmd = tool 'maven1'
-                    sh "${mavenCmd} test"
+        stage('Test') {
+            steps {
+                script {
+                    // Find Maven home dynamically
+                    def mavenHome = sh(script: 'mvn -v | grep "Maven home"', returnStdout: true).trim().replaceAll('Maven home: ', '')
+
+                    // Use Maven home to run Maven test command
+                    sh "${mavenHome}/bin/mvn test"
                 }
             }
         }
 
-        stage ('Install Dependencies'){
-            steps{
-                script{
-                    def mavenCmd = tool 'maven1'
-                    sh "${mavenCmd} exec: java -Dexec.mainClass=com.stockapp1.stock_app_non_gui"
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    // Find Maven home dynamically
+                    def mavenHome = sh(script: 'mvn -v | grep "Maven home"', returnStdout: true).trim().replaceAll('Maven home: ', '')
+
+                    // Use Maven home to run Maven exec command
+                    sh "${mavenHome}/bin/mvn exec:java -Dexec.mainClass=com.stockapp1.stock_app_non_gui"
                 }
             }
         }
 
-        stage ('Debug'){
-            steps{
-                script{
-                    sh 'echo $PATH'
-                    sh 'which mvn'
-                    sh 'ls-l/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/maven1'
-                    sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
-                    sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
+        stage('Debug') {
+            steps {
+                script {
+                    // Find Maven home dynamically
+                    def mavenHome = sh(script: 'mvn -v | grep "Maven home"', returnStdout: true).trim().replaceAll('Maven home: ', '')
+
+                    // Output Maven-related information
+                    sh "echo 'Maven Home: ${mavenHome}'"
+                    sh "${mavenHome}/bin/mvn -version"
                 }
             }
         }
     }
 
-    post{
-        success{
+    post {
+        success {
             echo 'Pipeline Build Success'
         }
 
-        failure{
+        failure {
             echo 'Pipeline Build Failure'
         }
     }
