@@ -10,19 +10,7 @@ pipeline {
         stage('SCM') {
             steps {
                 checkout scm
-            }
-        }
-
-        stage ('Build'){
-            steps{
-                script{
-
-                    env.JAVA_HOME = tool('JDK11')
-                    def mavenCMD = tool 'maven1'
-                    sh "${mavenCMD} clean compile"
-                }
-            }
-        }
+            }}
 
         stage('SonarQube Analysis') {
             steps {
