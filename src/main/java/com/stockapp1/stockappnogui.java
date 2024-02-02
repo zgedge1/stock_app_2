@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 public class stockappnogui {
 
-    public static String apiKey = "b31fcc2718da460a83388bca924328c7";
+    public static String apiKey = "Enter API KEy";
     public static String apiURl = "https://api.twelvedata.com/time_series";
 
     public static void main(String[] args) {
