@@ -2,13 +2,10 @@
 package com.stockapp1;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.Buffer;
 import java.util.Scanner;
 
 import org.json.JSONArray;
@@ -16,38 +13,37 @@ import org.json.JSONObject;
 
 public class stockappnogui {
 
-    private static String apiUrl = "https://api.twelvedata.com/time_series";
-    private static String apiKey = "b31fcc2718da460a83388bca924328c7";
+    public static String apiKey = "b31fcc2718da460a83388bca924328c7";
+    public static String apiURl = "https://api.twelvedata.com/time_series";
 
     public static void main(String[] args) {
-
         
-        System.out.println("Enter a ticker to search or type 'quit' at anyime to exit the program: \n");
+        System.out.println("Welcome to Stock App: \n");
 
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
 
-            String userInput = scanner.nextLine();
+            System.out.println("Enter a ticker or type 'quit' at anytime to exit: \n");
+            String tickerinp = scanner.nextLine();
 
-            if (userInput.equals("quit")) {
-                System.out.println("\n Closing Stock App.....\n");
-                break;
+            if (tickerinp.equals("quit")) {
+                System.out.println("Exiting Stock App\n");
+                break;  
             }
 
-            if (userInput.isBlank()) {
-                System.out.println("ERROR: Search field cannot be blank... Please enter a ticker to search");
-                continue;
-                
+            if (tickerinp.isBlank()) {
+                System.out.println("ERROR: Ticker entery cannot be blank:");
+                continue;  
             }
 
             try {
                 
-                URI uri = new URI(buildApiUrl(userInput));
+                URI uri = new URI(buildApiUrl(tickerinp));
                 URL url = uri.toURL();
 
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
+                
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
                     BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -56,42 +52,39 @@ public class stockappnogui {
 
                     StringBuffer response = new StringBuffer();
 
-                    while ((line = reader.readLine())!=null) {
+                    while ((line = reader.readLine())!= null) {
                         response.append(line);
                         
                     }
 
                     parseStockData(response.toString());
-
-                    reader.close();
                     
-                } else {
-                    System.out.println("ERROR: Cannot connect to the API. ERROR CODE: " + connection.getResponseCode());
                 }
 
-                connection.disconnect();
 
-            } catch (IOException | URISyntaxException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                // TODO: handle exception
             }
+
             
         }
 
     }
 
-    public static String buildApiUrl(String userInput) {
-        String symbols = userInput;
+    public static String buildApiUrl(String tickerInp) {
+        String symbols = tickerInp;
         String interval = "1min";
-        return String.format("%s?symbol=%s&interval=%s&apikey=%s", apiUrl, symbols, interval, apiKey);
-        
+
+        return String.format("%s?symbol=%s&interval=%s&apikey=%s", apiURl, symbols, interval, apiKey);
+
     }
 
-    private static void parseStockData(String getData) {
+    private static void parseStockData(String stockInfo) {
 
-        JSONObject json = new JSONObject(getData);
+        JSONObject json = new JSONObject(stockInfo);
 
-        if (!json.has("values") || json.getJSONArray("values").isEmpty()) {
-            System.out.println("ERROR: No Ticker Found");
+        if (!json.has("values") || json.isEmpty()) {
+            System.out.println("ERROR: No Ticker Found\n");
             return;
             
         }
@@ -99,17 +92,16 @@ public class stockappnogui {
         JSONArray valueArr = json.getJSONArray("values");
         JSONObject zero = valueArr.getJSONObject(0);
 
-        String openPrice = zero.getString("open");
-        String highPRice = zero.getString("high");
-        String lowPrice = zero.getString("low");
-        String closePRice = zero.getString("close");
+        String openPrice = zero.optString("open");
+        String highPrice = zero.optString("high");
+        String lowPrice = zero.optString("low");
+        String closePrice = zero.optString("close");
 
-        System.out.println("Opening Price: " + openPrice);
-        System.out.println("High Price: " + highPRice);
-        System.out.println("Low Price: " + lowPrice);
-        System.out.println("Closing Price: " + closePRice);
+        System.out.println("The Opening Price: " + openPrice + "\n");
+        System.out.println("The High Price is: " + highPrice + "\n");
+        System.out.println("The Low Price is: " + lowPrice + "\n");
+        System.out.println("The Closing Price is:" + closePrice + "\n");
 
-
+        
     }
-
 }
