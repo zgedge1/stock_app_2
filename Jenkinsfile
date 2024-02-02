@@ -1,71 +1,32 @@
-
-pipeline{
+pipeline {
     agent any
 
-    tools{
-        maven 'maven1'
-        jdk 'JDK11'
-    }
-
-    stages{
-        stage('Checkout Code'){
-            steps{
+    stages {
+        stage('SCM') {
+            steps {
                 checkout scm
             }
         }
 
-        stage('Build'){
-            steps{
-                script{
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner'
 
-                    def mavenCmd = tool 'maven1'
-                    def projectPath = "/var/jenkins_home/workspace/stock_app_2"
-                    sh"${mavenCmd} clean install"
-                    echo '$PATH'
-                    sh'which mvn'
-                    sh "ls-l ${mavenCmd}"
-                }
-            }
-        }
-
-        stage ('test'){
-            steps{
-                script{
-                    def mavenCmd = tool 'maven1'
-                    sh "${mavenCmd} test"
-                }
-            }
-        }
-
-        stage ('Install Dependencies'){
-            steps{
-                script{
-                    def mavenCmd = tool 'maven1'
-                    sh "${mavenCmd} exec: java -Dexec.mainClass=com.stockapp1.stock_app_non_gui"
-                }
-            }
-        }
-
-        stage ('Debug'){
-            steps{
-                script{
-                    sh 'echo $PATH'
-                    sh 'which mvn'
-                    sh 'ls-l /var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/maven1'
-                    sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
-                    sh 'ls -l /var/jenkins_home/workspace/stock_app_non_gui'
+                    withSonarQubeEnv('Your_SonarQube_Server_Name') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
                 }
             }
         }
     }
 
-    post{
-        success{
-            echo 'Pipeline Build Success'
+    post {
+        success {
+            echo 'SonarQube Analysis completed successfully'
         }
-
-        failure{
-            echo 'Pipeline Build Failure'
+        failure {
+            echo 'SonarQube Analysis failed'
         }
     }
 }
