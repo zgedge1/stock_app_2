@@ -11,22 +11,12 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    def scannerHome = tool 'SonarScanner'
-
-                    withSonarQubeEnv(sonar_scanner_1) {
+                    def scannerHome = tool 'sonar_scanner_1'
+                    withSonarQubeEnv() {
                         sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'SonarQube Analysis completed successfully'
-        }
-        failure {
-            echo 'SonarQube Analysis failed'
         }
     }
 }
